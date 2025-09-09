@@ -10,25 +10,32 @@ pipeline {
 
         stage('Compile Java Code') {
             steps {
-                // Compiling the Java file
-                bat 'javac linked_list.java'
+                // Compile both main class and test class
+                bat 'javac linked_list.java test.java'
             }
         }
 
-        stage('Run Java Program') {
+        stage('Run Main Program') {
             steps {
-                // Running the compiled Java program
+                // Run the main program
                 bat 'java linked_list'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                // Run the test program
+                bat 'java test'
             }
         }
     }
 
     post {
         success {
-            echo 'Java program ran successfully.'
+            echo 'Java program and test ran successfully.'
         }
         failure {
-            echo 'Java build or run failed.'
+            echo 'Java build, run, or test failed.'
         }
     }
 }
