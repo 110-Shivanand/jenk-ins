@@ -8,19 +8,27 @@ pipeline {
             }
         }
 
-        stage('Run Python Script') {
+        stage('Compile Java Code') {
             steps {
-                bat 'C:\\Users\\K_Shiva\\AppData\\Local\\Programs\\Python\\Python311\\python.exe linked_list.py'
+                // Compiling the Java file
+                bat 'javac linked_list.java'
+            }
+        }
+
+        stage('Run Java Program') {
+            steps {
+                // Running the compiled Java program
+                bat 'java linked_list'
             }
         }
     }
 
     post {
         success {
-            echo 'Build completed successfully.'
+            echo 'Java program ran successfully.'
         }
         failure {
-            echo 'Build failed.'
+            echo 'Java build or run failed.'
         }
     }
 }
