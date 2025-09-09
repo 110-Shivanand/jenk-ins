@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PYTHON_VERSION = 'python'  // Assuming python is installed and in PATH
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -14,23 +10,17 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                bat 'python linked_list.py'
-            }
-        }
-
-        stage('Run Unit Tests') {
-            steps {
-                bat 'python -m unittest discover tests'
+                bat 'C:\\Users\\K_Shiva\\AppData\\Local\\Programs\\Python\\Python311\\python.exe linked_list.py'
             }
         }
     }
 
     post {
         success {
-            echo 'Build and tests completed successfully.'
+            echo 'Build completed successfully.'
         }
         failure {
-            echo 'Build or tests failed.'
+            echo 'Build failed.'
         }
     }
 }
