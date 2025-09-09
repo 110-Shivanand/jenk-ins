@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    environment {
+        PYTHON_VERSION = '3.9'
+        VENV_DIR = '.venv'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/110-Shivanand/jenk-ins.git'
+            }
+        }
+
+        stage('Set Up Python Environment') {
+            steps {
+                script {
+                    // Install Python if not already installed
+                    sh 'sudo apt-get update && sudo apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-dev'
+                }
+            }
+        }
+
+        stage('Create Virtual Environment') {
+            steps {
+                script {
+                    // Create virtual environment
+                    sh "python${PYTHON_VERSION} -m venv ${VENV_DIR}"
+                    // Activate virtual environment and install dependencies
+                    sh ". ${VENV_DIR}/bin/activate && pip install --upgrade pip"
+                    sh ". ${VENV_DIR}/bin/activate && pip install -r requirements.txt"
+                }
+            }
+        }
+
+        stage('Run Python Script') {
+            steps {
+                script {
+                    // Activate virtual environment and run the script
+                    sh ". ${VENV_DIR}/bin/activate && python linked_list.py"
+                }
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    // Activate virtual environment and run tests
+                    sh ". ${VENV_DIR}/bin/activate && python -m unittest discover tests"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and tests completed successfully.'
+        }
+        failure {
+            echo 'Build or tests failed.'
+        }
+    }
+}
